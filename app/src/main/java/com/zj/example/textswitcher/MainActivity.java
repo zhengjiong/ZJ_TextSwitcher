@@ -3,14 +3,13 @@ package com.zj.example.textswitcher;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 /**
@@ -34,7 +33,11 @@ public class MainActivity extends Activity {
         mButtonNext = (Button) findViewById(R.id.next);
         mTextSwitcher = (TextSwitcher) findViewById(R.id.switcher);
 
+        //makeView只會在setFactory的時候調用一次
         mTextSwitcher.setFactory(viewFactory);
+
+        //設置第一次顯示的初始值
+        mTextSwitcher.setCurrentText("1");
 
         final Animation left_in = AnimationUtils.loadAnimation(this, R.anim.slide_from_left_in);
         final Animation right_out = AnimationUtils.loadAnimation(this, R.anim.slide_to_right_out);
@@ -62,12 +65,17 @@ public class MainActivity extends Activity {
                 mTextSwitcher.setText(String.valueOf(mCounter));
             }
         });
+
     }
 
     private ViewSwitcher.ViewFactory viewFactory = new ViewSwitcher.ViewFactory() {
+
+        /**
+         * 只會在setFactory的時候調用一次
+         */
         @Override
         public View makeView() {
-
+            Toast.makeText(MainActivity.this, "makeView", Toast.LENGTH_SHORT).show();
             TextView textView = new TextView(MainActivity.this);
             textView.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
             textView.setTextAppearance(MainActivity.this, android.R.style.TextAppearance_Large);
